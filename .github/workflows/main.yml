@@ -26,10 +26,17 @@ jobs:
       - name: Build Angular
         working-directory: FrontEnd
         run: npx ng build --configuration production
-        
-      - name: Deploy Kubernetes
-        working-directory: FrontEnd
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup kubeconfig
         run: |
-          kubectl apply -f angular-deployment.yaml
-          kubectl apply -f angular-service.yaml
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Deploy Kubernetes
+        run: |
+          kubectl apply -f FrontEnd/angular-deployment.yaml
+          kubectl apply -f FrontEnd/angular-service.yaml
           kubectl rollout restart deployment angular-app
