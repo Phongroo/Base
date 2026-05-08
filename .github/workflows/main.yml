@@ -10,10 +10,6 @@ jobs:
   build-fe:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: FrontEnd
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,7 +20,15 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        working-directory: FrontEnd
+        run: npm install --legacy-peer-deps
 
       - name: Build Angular
+        working-directory: FrontEnd
         run: npm run build --configuration production
+        
+      - name: Deploy Kubernetes
+        run: |
+          kubectl apply -f angular-deployment.yaml
+          kubectl apply -f angular-service.yaml
+          kubectl rollout restart deployment angular-app
