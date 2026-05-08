@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Angular
         working-directory: FrontEnd
-        run: npm run build --configuration production
+        run: npx ng build --configuration production
         
       - name: Deploy Kubernetes
         run: |
