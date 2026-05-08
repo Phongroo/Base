@@ -28,6 +28,7 @@ jobs:
         run: npx ng build --configuration production
         
       - name: Deploy Kubernetes
+        working-directory: FrontEnd
         run: |
           kubectl apply -f angular-deployment.yaml
           kubectl apply -f angular-service.yaml
