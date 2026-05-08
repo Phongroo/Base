@@ -1,0 +1,29 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Angular
+        run: |
+          npm install
+          npm run build --configuration production
+
+      - name: Build Docker image
+        run: |
+          docker build -t angular-app:latest .
+
+      - name: Deploy Kubernetes
+        run: |
+          kubectl apply -f angular-deployment.yaml
+          kubectl apply -f angular-service.yaml
+          kubectl rollout restart deployment angular-app
