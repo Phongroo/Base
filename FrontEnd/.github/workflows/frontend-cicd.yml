@@ -15,7 +15,7 @@ jobs:
 
       - name: Build Angular
         run: |
-          npm install
+          npm install --legacy-peer-deps
           npm run build --configuration production
 
       - name: Build Docker image
